@@ -7,13 +7,13 @@ async function main() {
     const [owner] = await hre.ethers.getSigners();
 
     // Get contract that we want to deploy
-    const contractFactory = await hre.ethers.getContractFactory("KGCNFT");
+    const contractFactory = await hre.ethers.getContractFactory("PEACE2UKRAINE");
 
     // Deploy contract with the correct constructor arguments
     const contract = await contractFactory.deploy(baseTokenURI);
 
     // Wait for this transaction to be mined
-    await contract.deployed();
+    // await contract.deployed();
 
     // Get contract address
     console.log("Contract deployed to:", contract.address);
@@ -24,7 +24,7 @@ async function main() {
     console.log("10 NFTs have been reserved");
 
     // Mint 3 NFTs by sending 0.03 ether
-    txn = await contract.mintNFTs(3, { value: utils.parseEther('0.003') });
+    txn = await contract.mintNFTs(3, { value: utils.parseEther('0.001') });
     await txn.wait()
 
     // Get all token IDs of the owner

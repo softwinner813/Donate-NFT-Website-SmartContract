@@ -1,0 +1,22 @@
+{
+    
+    "description": "This is test NFT for PEACE2UKRAINE",
+    "image": "https://gateway.pinata.cloud/ipfs/QmdSDGpGDx6MDSDKxfWkhTUSnbjn2JQWoKDTxc4uaBCH8M",
+    "name": "PEACE2UKRAINE-Bear",
+    "collection" : "Map",
+    "position" : {
+        "lang" : 30,
+        "long" : 300.0
+    },
+    "attributes": [
+        {
+            "trait_type": "Breed",
+            "value": "Maltipoo"
+        },
+        {
+            "trait_type": "Eye color",
+            "value": "Mocha"
+        }
+    ]
+}
+ 
