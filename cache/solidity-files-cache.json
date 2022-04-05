@@ -74,8 +74,8 @@
       ]
     },
     "E:\\3.BLOCKCHAIN\\Daniel-Donation-NFT\\SmartContract\\Donate-NFT-Website-SmartContract\\contracts\\Peace2Ukraine.sol": {
-      "lastModificationDate": 1648259556351,
-      "contentHash": "30bd4bd7980bde5d90053766506e6426",
+      "lastModificationDate": 1649049339747,
+      "contentHash": "5e02a94df5697b8b7981474aaf2ac6c2",
       "sourceName": "contracts/Peace2Ukraine.sol",
       "solcConfig": {
         "version": "0.8.4",

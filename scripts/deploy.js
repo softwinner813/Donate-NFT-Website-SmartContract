@@ -39,7 +39,13 @@ async function main() {
         await txn.wait()
     }
     
-    
+    await contract.addCollection("Map");
+    await contract.addCollection("3D Art");
+    const allCols = await contract.getAllCollections();
+    console.log("ALL COLLECTIONS:", allCols);
+    const firCols = await contract.getCollectionByIndex(1);
+    console.log("FIRST COLLECTION:", firCols);
+
     // Get all token IDs of the owner
     let tokens = await contract.tokensOfOwner(owner.address)
     console.log("Owner has tokens: ", tokens);

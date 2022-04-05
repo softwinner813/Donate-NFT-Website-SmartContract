@@ -20,25 +20,11 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
-// module.exports = {
-//   solidity: "0.8.4",
-//   defaultNetwork: "polygon_mumbai",
-//   networks: {
-//     polygon_mumbai: {
-//       url: API_URL,
-//       accounts: [PRIVATE_KEY]
-//     }
-//   },
-//   etherscan: {
-//     apiKey: ETHERSCAN_API
-//   }
-// };
-
 module.exports = {
   solidity: "0.8.4",
-  defaultNetwork: "ethereum",
+  defaultNetwork: "polygon_mumbai",
   networks: {
-    ethereum: {
+    polygon_mumbai: {
       url: API_URL,
       accounts: [PRIVATE_KEY]
     }
@@ -47,6 +33,20 @@ module.exports = {
     apiKey: ETHERSCAN_API
   }
 };
+
+// module.exports = {
+//   solidity: "0.8.4",
+//   defaultNetwork: "ethereum",
+//   networks: {
+//     ethereum: {
+//       url: API_URL,
+//       accounts: [PRIVATE_KEY]
+//     }
+//   },
+//   etherscan: {
+//     apiKey: ETHERSCAN_API
+//   }
+// };
 
         
         

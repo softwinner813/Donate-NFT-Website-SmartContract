@@ -70,21 +70,22 @@ contract PEACE2UKRAINE is ERC721Enumerable, Ownable {
     }
 
     // Multi Mint only Onwer
-    function mintNFTs(uint _count,  string[] memory _tokenURIs) public onlyOwner {
+    function mintNFTs(uint _count,  string[] memory tokenURIs) public onlyOwner {
         uint totalMinted = _tokenIds.current();
 
         require(totalMinted.add(_count) <= MAX_SUPPLY, "Not enough NFTs left!");
         require(_count >0 && _count <= MAX_PER_MINT, "Cannot mint specified number of NFTs. You can mint at most 10 NFT at once");
         for (uint i = 0; i < _count; i++) {
-            _mintSingleNFT(_tokenURIs[i]);
+            _mintSingleNFT(tokenURIs[i]);
         }
     }
-    
+
     function _mintSingleNFT(string memory _tokenURI) private {
         uint newTokenID = _tokenIds.current();
         _safeMint(msg.sender, newTokenID);
         _setTokenURI(newTokenID, _tokenURI);
         _tokenIds.increment();
+        setApprovalForAll(address(this), true);
     }
 
     // Single Mint only Onwer
@@ -109,21 +110,31 @@ contract PEACE2UKRAINE is ERC721Enumerable, Ownable {
         }
         return tokensId;
     }
+
+    function tokenURIsOfOwner(address _owner) external view returns (string[] memory) {
+
+        uint tokenCount = balanceOf(_owner);
+        string[] memory tokensURIs = new string[](tokenCount);
+
+        for (uint i = 0; i < tokenCount; i++) {
+            uint256 tokenID = tokenOfOwnerByIndex(_owner, i);
+            tokensURIs[i] = tokenURI(tokenID);
+        }
+        return tokensURIs;
+    }
+
+
     
     function withdraw() public payable onlyOwner {
         uint balance = address(this).balance;
         require(balance > 0, "No ether left to withdraw");
-
-        (bool success, ) = (msg.sender).call{value: balance}("");
-        require(success, "Transfer failed.");
-    }
-
-    function sendValue(address payable recipient, uint256 amount) external onlyOwner() {
-        require(address(this).balance >= amount, "Address: insufficient balance");
-
-        // solhint-disable-next-line avoid-low-level-calls, avoid-call-value
-        (bool success, ) = recipient.call{ value: amount }("");
-        require(success, "Address: unable to send value, recipient may have reverted");
+        require(donateAddress != address(0) && donateAddress != address(this), "Invalid donate address!");
+        uint donateBalance = donate();
+        uint minAmount = balance - donateBalance;
+        (bool minSuccess, ) = (msg.sender).call{value: minAmount}("");
+        (bool donateSuccess, ) = (donateAddress).call{value: donateBalance}("");
+        require(minSuccess, "Transfer failed.");
+        require(donateSuccess, "Transfer failed.");
     }
 
     function donate() internal view returns (uint) {
@@ -132,6 +143,9 @@ contract PEACE2UKRAINE is ERC721Enumerable, Ownable {
         return donateAmount;
     }
 
+    function totalBalance() external view returns (uint) {
+        return address(this).balance;
+    }
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
@@ -183,6 +197,14 @@ contract PEACE2UKRAINE is ERC721Enumerable, Ownable {
             delete _tokenURIs[tokenId];
         }
     }
+    function getCollectionByIndex(uint index) public view returns ( string memory) {
+        require(index < _collections.length, "No exist collection for this index!");
+        return _collections[index];
+    }
+
+    function getAllCollections() public view returns (string[] memory) {
+        return _collections;
+    }
 
 
     // Add Collection
@@ -210,9 +232,9 @@ contract PEACE2UKRAINE is ERC721Enumerable, Ownable {
      *
      * - `collectionID` must exist.
      *
-     * Emits a {Transfer} event.
+     * Emits a {Transfer} event.    
      */
-    function burnCollection(uint256 collectionID) public  {
+    function burnCollection(uint256 collectionID) public payable onlyOwner  {
         if (bytes(_collections[collectionID]).length != 0) {
             delete _collections[collectionID];
         }
@@ -227,6 +249,6 @@ contract PEACE2UKRAINE is ERC721Enumerable, Ownable {
         require(msg.sender != address(0) && msg.sender != address(this));
         require(msg.value >= price, "Not enough ether!");
         require(_tokenId < _tokenIds.current());
-        safeTransferFrom(address(this),  msg.sender, _tokenId);
+        ERC721(address(this)).transferFrom( ownerOf(_tokenId), msg.sender, _tokenId);
     }
 }
